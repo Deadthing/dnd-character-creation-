@@ -1,0 +1,7 @@
+
+     Root
+         charname
+          Entry1
+          Button_Lite1
+          Entry2
+          Frame1
