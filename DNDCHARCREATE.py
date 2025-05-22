@@ -1,13 +1,9 @@
 # -------------------------------------------------------------------------------------------------------------------------------
-# Gluonix Runtime
+# Database Initialization
 # -------------------------------------------------------------------------------------------------------------------------------
-#################################################################################################################################
-if __name__=='__main__':
-    from Nucleon.Runner import * ###!REQUIRED ------- Any Script Before This Won't Effect GUI Elements
-#################################################################################################################################
-#################################################################################################################################
-# -------------------------------------------------------------------------------------------------------------------------------
-# Developer Programming Start
+# This script initializes a SQLite database for a character creation application.
+# It creates tables for users, characters, and character statistics.
+# The database is named 'characterCreate.db'.
 # -------------------------------------------------------------------------------------------------------------------------------
 import sqlite3
 
@@ -34,7 +30,7 @@ def startup_db():
                         level INTEGER DEFAULT 1,
                         background TEXT,
                         alignment TEXT,
-                        FORIEGN KEY (user_id) REFERENCES users (id)
+                        FOREIGN KEY (user_id) REFERENCES users (id)
                     )
                     """) 
     # Now create Stats Table
@@ -42,7 +38,7 @@ def startup_db():
                    CREATE TABLE IF NOT EXISTS statistics (
                        character_id INTEGER PRIMARY KEY,
                        strength INTEGER NOT NULL, 
-                       desterity INTEGER NOT NULL,
+                       dexterity INTEGER NOT NULL,
                        constitution INTEGER NOT NULL,
                        intelligence INTEGER NOT NULL,
                        wisdom INTEGER NOT NULL,
@@ -52,15 +48,61 @@ def startup_db():
                    """)   
     conn.commit()
     conn.close()
+
+#Function to add a new user
+def add_user(username, password):
+    conn = sqlite3.connect('characterCreate.db')
+    cursor = conn.cursor()
     
-if __name__ == "__main__":
-    startup_db()
-    print("Database setup complete.")
-    # The database is now set up and ready to use.
-    # You can add more functions here to interact with the database, such as adding users, creating characters, etc.
-    # For example:
-    # add_user("username", "password")
-    # create_character(user_id, "character_name              
+    cursor.execute("""
+                   INSERT INTO users (username, password)
+                   VALUES (?, ?)
+                   """, (username, password))
+    user_id = cursor.lastrowid #this was a copilot suggestion here, returning the uid, but I liked the the idea
+    conn.commit()
+    conn.close()
+    return user_id
+
+
+# Function to add a new character under an existing user
+def add_character(user_id, name, race, char_class, level = 1, background = None, alignment = None):
+    conn = sqlite3.connect('characterCreate.db')
+    cursor = conn.cursor()
+    
+    cursor.execute("""
+                   INSERT INTO characters (user_id, name, race, class, level, background, alignment)
+                   VALUES (?, ?, ?, ?, ?, ?, ?) """, 
+                   (user_id, name, race, char_class, level, background, alignment))
+    
+    char_id = cursor.lastrowid #this was a copilot suggestion here, returning the uid, but I liked the the idea
+    conn.commit()
+    conn.close()
+    return char_id
+      
+                    
+# Function to add statistics for a character
+def add_stats(character_id, strength, dexterity, constitution, intelligence, wisdom, charisma):
+    conn = sqlite3.connect('characterCreate.db')
+    cursor = conn.cursor()
+    cursor.execute("""
+                   INSERT INTO statistics (character_id, strength, dexterity, constitution, intelligence, wisdom, charisma)
+                   VALUES (?, ?, ?, ?, ?, ?, ?)""",
+                   (character_id, strength, dexterity, constitution, intelligence, wisdom, charisma))
+    conn.commit()
+    conn.close()
+    return True
+#################################################################################################################################
+# Gluonix Runtime
+# -------------------------------------------------------------------------------------------------------------------------------
+#################################################################################################################################
+if __name__=='__main__':
+    from Nucleon.Runner import * ###!REQUIRED ------- Any Script Before This Won't Effect GUI Elements
+#################################################################################################################################
+#################################################################################################################################
+# -------------------------------------------------------------------------------------------------------------------------------
+# Developer Programming Start
+# -------------------------------------------------------------------------------------------------------------------------------
+
 
 # -------------------------------------------------------------------------------------------------------------------------------
 # Developer Programming End
