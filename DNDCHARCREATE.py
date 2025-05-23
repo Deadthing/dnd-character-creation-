@@ -91,6 +91,37 @@ def add_stats(character_id, strength, dexterity, constitution, intelligence, wis
     conn.commit()
     conn.close()
     return True
+
+# Clear Tables for testing purposes
+def clear_tables():
+    conn = sqlite3.connect('characterCreate.db')
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM users")
+    cursor.execute("DELETE FROM characters")
+    cursor.execute("DELETE FROM statistics")
+    conn.commit()
+    conn.close()
+    
+# Function to print the tables in a readable fasion
+
+def print_tables():
+    conn = sqlite3.connect('characterCreate.db')
+    cursor = conn.cursor()
+    
+    # Print users
+    cursor.execute("SELECT id, username FROM users")
+    users = cursor.fetchall()
+    
+    #Print message if no users
+    if not users:
+        print("No users found.")
+        conn.close()
+        return
+    print("======CHARACTER CREATION TABLES======")
+    
+    # 
+    conn.close()
+    
 #################################################################################################################################
 # Gluonix Runtime
 # -------------------------------------------------------------------------------------------------------------------------------
@@ -103,11 +134,13 @@ if __name__=='__main__':
 # Developer Programming Start
 # -------------------------------------------------------------------------------------------------------------------------------
 
+#Testing the database functions
+print_tables()
 
 # -------------------------------------------------------------------------------------------------------------------------------
 # Developer Programming End
 # -------------------------------------------------------------------------------------------------------------------------------
 #################################################################################################################################
 #################################################################################################################################
-    Root.Start() ###!REQUIRED ------- Any Script After This Will Not Execute
+Root.Start() ###!REQUIRED ------- Any Script After This Will Not Execute
 #################################################################################################################################
