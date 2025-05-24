@@ -99,6 +99,11 @@ def clear_tables():
     cursor.execute("DELETE FROM users")
     cursor.execute("DELETE FROM characters")
     cursor.execute("DELETE FROM statistics")
+    
+    # sqlite tracks autoincrement seprately so: also clear the autoincrement counters
+    cursor.execute("DELETE FROM sqlite_sequence WHERE name='users'")
+    cursor.execute("DELETE FROM sqlite_sequence WHERE name='characters'")   
+    cursor.execute("DELETE FROM sqlite_sequence WHERE name='statistics'")   
     conn.commit()
     conn.close()
     
@@ -113,7 +118,7 @@ def print_tables():
     users = cursor.fetchall()
     
     #Print message if no users
-    if len(users):
+    if len(users) == 0:
         print("No users found.\n")
         conn.close()
         return
@@ -126,36 +131,36 @@ def print_tables():
         print(f"User: {username} (ID: {user_id})")
         print("------")
     # Print characters
-    print("======CHARACTER TABLES======")
+        print("======CHARACTER TABLES======")
     
-    cursor.execute("""SELECT id, name, race, class, level, backgorund, alignment 
+        cursor.execute("""SELECT id, name, race, class, level, background, alignment 
                    FROM characters
                    WHERE user_id = ?""", (user_id,))
-    characters = cursor.fetchall()
+        characters = cursor.fetchall()
     
     #Print message if no characters
-    if len(characters) == 0:
-        print("No characters found for this user.\n")
-        conn.close()
-        return
-    else:
+        if len(characters) == 0:
+            print("No characters found for this user.\n")
+            conn.close()
+            return
+        else:
         # Print each character
-        for character in characters:
-            char_id = character[0]
-            name = character[1]
-            race = character[2]
-            char_class = character[3]
-            level = character[4]
-            background = character[5]
-            alignment = character[6]
-            
-            print(f" Character: {name} (ID: {char_id})")
-            print(f" Race: {race}")
-            print(f" Class: {char_class}")
-            print(f" Level: {level}")
-            print(f" Background: {background}")
-            print(f" Alignment: {alignment}")
-            print("------")
+            for character in characters:
+                char_id = character[0]
+                name = character[1]
+                race = character[2]
+                char_class = character[3]
+                level = character[4]
+                background = character[5]
+                alignment = character[6]
+                
+                print(f" Character: {name} (ID: {char_id})")
+                print(f" Race: {race}")
+                print(f" Class: {char_class}")
+                print(f" Level: {level}")
+                print(f" Background: {background}")
+                print(f" Alignment: {alignment}")
+                print("------")
             
             # Print statistics
             print("======STATISTICS TABLE======")
@@ -198,6 +203,9 @@ if __name__=='__main__':
 # -------------------------------------------------------------------------------------------------------------------------------
 
 #Testing the database functions
+clear_tables()
+startup_db()
+add_user("Wizard", "itsboss")
 print_tables()
 
 # -------------------------------------------------------------------------------------------------------------------------------
