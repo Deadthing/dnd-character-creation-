@@ -81,13 +81,13 @@ def add_character(user_id, name, race, char_class, level = 1, background = None,
       
                     
 # Function to add statistics for a character
-def add_stats(character_id, strength, dexterity, constitution, intelligence, wisdom, charisma):
+def add_stats(char_id, strength, dexterity, constitution, intelligence, wisdom, charisma):
     conn = sqlite3.connect('characterCreate.db')
     cursor = conn.cursor()
     cursor.execute("""
                    INSERT INTO statistics (character_id, strength, dexterity, constitution, intelligence, wisdom, charisma)
                    VALUES (?, ?, ?, ?, ?, ?, ?)""",
-                   (character_id, strength, dexterity, constitution, intelligence, wisdom, charisma))
+                   (char_id, strength, dexterity, constitution, intelligence, wisdom, charisma))
     conn.commit()
     conn.close()
     return True
@@ -162,32 +162,32 @@ def print_tables():
                 print(f" Alignment: {alignment}")
                 print("------")
             
-            # Print statistics
-            print("======STATISTICS TABLE======")
-            
-            cursor.execute("""SELECT strength, dexterity, consitution, intelligence, wisdom, charisma
-                           FROM statistics
-                           WHERE character_id = ?""", (char_id))
-            stats = cursor.fetchone()
-            if stats is None:
-                print("No statistics found for this character.\n")
-            else:
-                strength = stats[0]
-                dexterity = stats[1]
-                constitution = stats[2]
-                intelligence = stats[3]
-                wisdom = stats[4]
-                charisma = stats[5]
-                
-                print(f" Stats:")
-                print(f" Strength: {strength}")
-                print(f" Dexterity: {dexterity}")
-                print(f" Constitution: {constitution}")
-                print(f" Intelligence: {intelligence}")
-                print(f" Wisdom: {wisdom}")
-                print(f" Charisma: {charisma}")
-                conn.close()
-print("====================================\n")
+                # Print statistics
+                print("======STATISTICS TABLE======")
+                        
+                cursor.execute("""SELECT strength, dexterity, constitution, intelligence, wisdom, charisma
+                                    FROM statistics
+                                    WHERE character_id = ?""", (char_id,))
+                stats = cursor.fetchone()
+                if stats is None:
+                    print("No statistics found for this character.\n")
+                else:
+                    strength = stats[0]
+                    dexterity = stats[1]
+                    constitution = stats[2]
+                    intelligence = stats[3]
+                    wisdom = stats[4]
+                    charisma = stats[5]
+                            
+                    print(f" Stats:")
+                    print(f" Strength: {strength}")
+                    print(f" Dexterity: {dexterity}")
+                    print(f" Constitution: {constitution}")
+                    print(f" Intelligence: {intelligence}")
+                    print(f" Wisdom: {wisdom}")
+                    print(f" Charisma: {charisma}")
+                    conn.close()
+            print("====================================\n")
 
     
 #################################################################################################################################
@@ -205,7 +205,11 @@ if __name__=='__main__':
 #Testing the database functions
 clear_tables()
 startup_db()
-add_user("Wizard", "itsboss")
+# creating a varible to store the user_id awkwardly because other way to fix this are getting ahead of myself
+user_id = add_user("Wizard", "itsboss")
+char_id = add_character(user_id, "Red", "Human", "Wizard", level = 1, background = "Sage", alignment = "Lawful Evil")
+# add_stats(char_id, 10, 12, 14, 16, 18, 20)
+print(f" DEBUG About to fetch stats for character ID: {char_id}, type = {type(char_id)}")
 print_tables()
 
 # -------------------------------------------------------------------------------------------------------------------------------
