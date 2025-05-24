@@ -113,14 +113,77 @@ def print_tables():
     users = cursor.fetchall()
     
     #Print message if no users
-    if not users:
-        print("No users found.")
+    if len(users):
+        print("No users found.\n")
         conn.close()
         return
-    print("======CHARACTER CREATION TABLES======")
     
-    # 
-    conn.close()
+    print("======USERS TABLE======")
+    # Print each user
+    for user in users:
+        user_id = user[0]
+        username = user[1]
+        print(f"User: {username} (ID: {user_id})")
+        print("------")
+    # Print characters
+    print("======CHARACTER TABLES======")
+    
+    cursor.execute("""SELECT id, name, race, class, level, backgorund, alignment 
+                   FROM characters
+                   WHERE user_id = ?""", (user_id,))
+    characters = cursor.fetchall()
+    
+    #Print message if no characters
+    if len(characters) == 0:
+        print("No characters found for this user.\n")
+        conn.close()
+        return
+    else:
+        # Print each character
+        for character in characters:
+            char_id = character[0]
+            name = character[1]
+            race = character[2]
+            char_class = character[3]
+            level = character[4]
+            background = character[5]
+            alignment = character[6]
+            
+            print(f" Character: {name} (ID: {char_id})")
+            print(f" Race: {race}")
+            print(f" Class: {char_class}")
+            print(f" Level: {level}")
+            print(f" Background: {background}")
+            print(f" Alignment: {alignment}")
+            print("------")
+            
+            # Print statistics
+            print("======STATISTICS TABLE======")
+            
+            cursor.execute("""SELECT strength, dexterity, consitution, intelligence, wisdom, charisma
+                           FROM statistics
+                           WHERE character_id = ?""", (char_id))
+            stats = cursor.fetchone()
+            if stats is None:
+                print("No statistics found for this character.\n")
+            else:
+                strength = stats[0]
+                dexterity = stats[1]
+                constitution = stats[2]
+                intelligence = stats[3]
+                wisdom = stats[4]
+                charisma = stats[5]
+                
+                print(f" Stats:")
+                print(f" Strength: {strength}")
+                print(f" Dexterity: {dexterity}")
+                print(f" Constitution: {constitution}")
+                print(f" Intelligence: {intelligence}")
+                print(f" Wisdom: {wisdom}")
+                print(f" Charisma: {charisma}")
+                conn.close()
+print("====================================\n")
+
     
 #################################################################################################################################
 # Gluonix Runtime
