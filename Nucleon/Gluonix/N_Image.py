@@ -19,7 +19,7 @@ class Image:
         if self._GUI is not None:
             self._Type = "Image"
             try:
-                self._Config = ['Name', 'Auto_Dark', 'Background', 'Light_Background', 'Dark_Background', 'Foreground', 'Light_Foreground', 'Dark_Foreground', 'Border_Color', 'Light_Border_Color', 'Dark_Border_Color', 'Border_Size', 'Resize_Width', 'Resize', 'Resize_Height', 'Move', 'Move_Left', 'Move_Top', 'Popup', 'Display', 'Left', 'Top', 'Width', 'Height', 'Path', 'Path_Initial', 'Url', 'Array', 'Pil', 'Rotate', 'Transparent', 'Aspect_Ratio', 'Convert_Type', 'Tolerance', 'Hover_Background', 'Light_Hover_Background', 'Dark_Hover_Background', 'Hover_Foreground', 'Light_Hover_Foreground', 'Dark_Hover_Foreground', 'Hover_Border_Color', 'Light_Hover_Border_Color', 'Dark_Hover_Border_Color']
+                self._Config = ['Name', 'Background', 'Light_Background', 'Dark_Background', 'Foreground', 'Light_Foreground', 'Dark_Foreground', 'Border_Color', 'Light_Border_Color', 'Dark_Border_Color', 'Border_Size', 'Resize_Width', 'Resize', 'Resize_Height', 'Move', 'Move_Left', 'Move_Top', 'Popup', 'Display', 'Left', 'Top', 'Width', 'Height', 'Path', 'Path_Initial', 'Url', 'Array', 'Pil', 'Rotate', 'Transparent', 'Aspect_Ratio', 'Convert_Type', 'Tolerance', 'Hover_Background', 'Light_Hover_Background', 'Dark_Hover_Background', 'Hover_Foreground', 'Light_Hover_Foreground', 'Dark_Hover_Foreground', 'Hover_Border_Color', 'Light_Hover_Border_Color', 'Dark_Hover_Border_Color']
                 self._Initialized = False
                 self._Name = False
                 self._Last_Name = False
@@ -54,7 +54,6 @@ class Image:
                 self._Aspect_Ratio = True
                 self._Convert_Type = 'RGBA'
                 self._Resizable = self._Main._Resizable
-                self._Auto_Dark = True
                 self._On_Show = False
                 self._On_Hide = False
                 self._On_Hover_In = False
@@ -300,9 +299,8 @@ class Image:
                     setattr(self, "_Light_Background", self._Background)
                 if not hasattr(self, "_Dark_Background"):
                     setattr(self, "_Dark_Background", self._GUI.Invert(self._Background))
-            if self._Auto_Dark:
-                self.Update_Color()
             if not self._Initialized:
+                self._GUI.Initiate_Colors(self)
                 self._Width_Current, self._Height_Current, self._Left_Current, self._Top_Current, = self._Width, self._Height, self._Left, self._Top
                 self._Frame.Config(Width=self._Width_Current, Height=self._Height_Current, Left=self._Left_Current, Top=self._Top_Current)
                 self._Frame.Config(Background=self._Background, Border_Size=self._Border_Size, Border_Color=self._Border_Color)
@@ -334,12 +332,6 @@ class Image:
                 self._Last_Name = self._Name
         except Exception as E:
             self._GUI.Error(f"{self._Type} -> Create -> {E}")
-            
-    def Update_Color(self):
-        try:
-            self._GUI.Initiate_Colors(self)
-        except Exception as E:
-            self._GUI.Error(f"{self._Type} -> Update_Color -> {E}")
     
     def RGB(self, HEX):
         try:
@@ -487,7 +479,7 @@ class Image_Lite:
         if self._GUI is not None:
             self._Type = "Image_Lite"
             try:
-                self._Config = ['Name', 'Auto_Dark', 'Background', 'Light_Background', 'Dark_Background', 'Foreground', 'Light_Foreground', 'Dark_Foreground', 'Resize_Width', 'Resize', 'Resize_Height', 'Move', 'Move_Left', 'Move_Top', 'Popup', 'Display', 'Left', 'Top', 'Width', 'Height', 'Path', 'Path_Initial', 'Url', 'Array', 'Pil', 'Rotate', 'Transparent', 'Aspect_Ratio', 'Convert_Type', 'Tolerance', 'Hover_Background', 'Light_Hover_Background', 'Dark_Hover_Background', 'Hover_Foreground']
+                self._Config = ['Name', 'Background', 'Light_Background', 'Dark_Background', 'Foreground', 'Light_Foreground', 'Dark_Foreground', 'Resize_Width', 'Resize', 'Resize_Height', 'Move', 'Move_Left', 'Move_Top', 'Popup', 'Display', 'Left', 'Top', 'Width', 'Height', 'Path', 'Path_Initial', 'Url', 'Array', 'Pil', 'Rotate', 'Transparent', 'Aspect_Ratio', 'Convert_Type', 'Tolerance', 'Hover_Background', 'Light_Hover_Background', 'Dark_Hover_Background', 'Hover_Foreground']
                 self._Initialized = False
                 self._Name = False
                 self._Last_Name = False
@@ -517,7 +509,6 @@ class Image_Lite:
                 self._Aspect_Ratio = True
                 self._Convert_Type = 'RGBA'
                 self._Resizable = self._Main._Resizable
-                self._Auto_Dark = True
                 self._On_Show = False
                 self._On_Hide = False
                 self._On_Hover_In = False
@@ -755,9 +746,9 @@ class Image_Lite:
                     setattr(self, "_Light_Background", self._Background)
                 if not hasattr(self, "_Dark_Background"):
                     setattr(self, "_Dark_Background", self._GUI.Invert(self._Background))
-            if self._Auto_Dark:
-                self.Update_Color()
             if not self._Initialized:
+                self._GUI.Initiate_Colors(self)
+                #self._GUI.Initiate_Colors(self)
                 self._Width_Current, self._Height_Current, self._Left_Current, self._Top_Current, = self._Width, self._Height, self._Left, self._Top
                 if not self._Display:
                     self.Hide()
@@ -786,12 +777,6 @@ class Image_Lite:
                 self._Last_Name = self._Name
         except Exception as E:
             self._GUI.Error(f"{self._Type} -> Create -> {E}")
-            
-    def Update_Color(self):
-        try:
-            self._GUI.Initiate_Colors(self)
-        except Exception as E:
-            self._GUI.Error(f"{self._Type} -> Update_Color -> {E}")
     
     def RGB(self, HEX):
         try:
@@ -939,7 +924,7 @@ class Image_Zoom:
         if self._GUI is not None:
             self._Type = "Image_Zoom"
             try:
-                self._Config = ['Name', 'Auto_Dark', 'Background', 'Light_Background', 'Dark_Background', 'Border_Color', 'Light_Border_Color', 'Dark_Border_Color', 'Border_Size', 'Resize_Width', 'Resize', 'Resize_Height', 'Move', 'Move_Left', 'Move_Top', 'Popup', 'Display', 'Left', 'Top', 'Width', 'Height', 'Path', 'Path_Initial', 'Url', 'Array', 'Pil', 'Rotate', 'Transparent', 'Hover_Background', 'Light_Hover_Background', 'Dark_Hover_Background', 'Hover_Foreground', 'Light_Hover_Foreground', 'Dark_Hover_Foreground', 'Hover_Border_Color', 'Light_Hover_Border_Color', 'Dark_Hover_Border_Color']
+                self._Config = ['Name', 'Background', 'Light_Background', 'Dark_Background', 'Border_Color', 'Light_Border_Color', 'Dark_Border_Color', 'Border_Size', 'Resize_Width', 'Resize', 'Resize_Height', 'Move', 'Move_Left', 'Move_Top', 'Popup', 'Display', 'Left', 'Top', 'Width', 'Height', 'Path', 'Path_Initial', 'Url', 'Array', 'Pil', 'Rotate', 'Transparent', 'Hover_Background', 'Light_Hover_Background', 'Dark_Hover_Background', 'Hover_Foreground', 'Light_Hover_Foreground', 'Dark_Hover_Foreground', 'Hover_Border_Color', 'Light_Hover_Border_Color', 'Dark_Hover_Border_Color']
                 self._Initialized = False
                 self._Name = False
                 self._Last_Name = False
@@ -951,7 +936,7 @@ class Image_Zoom:
                 self._Frame.Bind(On_Click = self.Drag_Start)
                 self._Frame.Bind(On_Drag = self.Drag)
                 self._Frame.Bind(On_Mouse_Wheel = self.Zoom)
-                self._Frame.Bind(On_Right_Click = self.Reset)
+                self._Frame.Bind(On_Right_Click = lambda E: self.Reset())
                 self._Border_Color = '#000000'
                 self._Border_Size = 0
                 self._Background = self._Main._Background
@@ -971,18 +956,11 @@ class Image_Zoom:
                 self._Rotate = 0
                 self._Angle = 0
                 self._Transparent = True
-                self._Zoom_Scale = 1.0
-                self._Zoom_Center = None
                 self._Resizable = self._Main._Resizable
-                self._Auto_Dark = True
                 self._On_Show = False
                 self._On_Hide = False
                 self._On_Hover_In = False
                 self._On_Hover_Out = False
-                self._On_Click = False
-                self._On_Drag = False
-                self._On_Mouse_Wheel = False
-                self._On_Right_Click = False
             except Exception as E:
                 self._GUI.Error(f"{self._Type} -> Init -> {E}")
         else:
@@ -1098,18 +1076,6 @@ class Image_Zoom:
             if 'On_Hover_Out' in Input:
                 self._On_Hover_Out = Input['On_Hover_Out']
             Input['On_Hover_Out'] = lambda E: self.On_Hover_Out(E)
-            if 'On_Click' in Input:
-                self._On_Click = Input['On_Click']
-                del Input['On_Click']
-            if 'On_Drag' in Input:
-                self._On_Drag = Input['On_Drag']
-                del Input['On_Drag']
-            if 'On_Mouse_Wheel' in Input:
-                self._On_Mouse_Wheel = Input['On_Mouse_Wheel']
-                del Input['On_Mouse_Wheel']
-            if 'On_Right_Click' in Input:
-                self._On_Right_Click = Input['On_Right_Click']
-                del Input['On_Right_Click']
             self._Frame.Bind(**Input)
         except Exception as E:
             self._GUI.Error(f"{self._Type} -> Bind -> {E}")
@@ -1224,10 +1190,11 @@ class Image_Zoom:
                     setattr(self, "_Light_Background", self._Background)
                 if not hasattr(self, "_Dark_Background"):
                     setattr(self, "_Dark_Background", self._GUI.Invert(self._Background))
-            if self._Auto_Dark:
-                self.Update_Color()
             if not self._Initialized:
+                self._GUI.Initiate_Colors(self)
+                #self._GUI.Initiate_Colors(self)
                 self._Width_Current, self._Height_Current, self._Left_Current, self._Top_Current, = self._Width, self._Height, self._Left, self._Top
+                self._Zoom_Width, self._Zoom_Height, self._Last_Zoom_Width, self._Last_Zoom_Height = self._Width_Current, self._Height_Current, self._Width_Current, self._Height_Current
                 self._Frame.Config(Width=self._Width_Current, Height=self._Height_Current, Left=self._Left_Current, Top=self._Top_Current)
                 self._Frame.Config(Background=self._Background, Border_Size=self._Border_Size, Border_Color=self._Border_Color)
                 self._Frame.Create()
@@ -1258,79 +1225,62 @@ class Image_Zoom:
         except Exception as E:
             self._GUI.Error(f"{self._Type} -> Create -> {E}")
             
-    def Update_Color(self):
-        try:
-            self._GUI.Initiate_Colors(self)
-        except Exception as E:
-            self._GUI.Error(f"{self._Type} -> Update_Color -> {E}")
-            
     def Open(self):
         try:
             if self._Image:
                 self._Image.close()
-            if self._Url and self._Path:
-                Image_Data = requests_get(self._Path)
-                self._Image = PIL_Image.open(BytesIO(Image_Data.content))
-            elif self._Array and self._Path is not None:
-                self._Image = PIL_Image.fromarray(self._Path)
-            elif self._Pil and self._Path:
-                self._Image = self._Path.copy()
-            elif self._Path and os.path.exists(self._Path):
-                self._Image = PIL_Image.open(self._Path)
-                if not self._Path_Initial:
-                    self._Path_Initial = self._Path
+            if self._Url:
+                if self._Path:
+                    Image_Data = requests_get(self._Path)
+                    self._Image = PIL_Image.open(BytesIO(Image_Data.content))
+            elif self._Array:
+                if self._Path is not None:
+                    self._Image = PIL_Image.fromarray(self._Path)
+            elif self._Pil:
+                if self._Path:
+                    self._Image = self._Path.copy()
             else:
-                self._Image = None
+                if self._Path and os.path.exists(self._Path):
+                    self._Image = PIL_Image.open(self._Path)
+                    if not self._Path_Initial:
+                        self._Path_Initial = self._Path
+                else:
+                    self._Image = False
             if self._Image:
                 self._Image_Width, self._Image_Height = self._Image.size
-                if self._Zoom_Center is None:
-                    self._Zoom_Center = (self._Image_Width // 2, self._Image_Height // 2)
-                CX, CY = self._Zoom_Center
-                CX = max(0, min(CX, self._Image_Width))
-                CY = max(0, min(CY, self._Image_Height))
-                self._Zoom_Center = (CX, CY)
-                if not hasattr(self, "_Zoom_Scale"):
-                    self._Zoom_Scale = 1.0
         except Exception as E:
             self._GUI.Error(f"{self._Type} -> Open -> {E}")
             
     def Convert(self, Frame_Width, Frame_Height):
         try:
-            if not self._Image:
-                return {"Image": None, "Top": 0, "Left": 0}
-            Frame_Aspect = Frame_Width / Frame_Height
-            Zoom_W = self._Image_Width / self._Zoom_Scale
-            Zoom_H = self._Image_Height / self._Zoom_Scale
-            if Zoom_W / Zoom_H > Frame_Aspect:
-                View_H = int(Zoom_H)
-                View_W = int(View_H * Frame_Aspect)
-            else:
-                View_W = int(Zoom_W)
-                View_H = int(View_W / Frame_Aspect)
-            CX, CY = self._Zoom_Center
-            CX = max(View_W // 2, min(self._Image_Width - View_W // 2, CX))
-            CY = max(View_H // 2, min(self._Image_Height - View_H // 2, CY))
-            self._Zoom_Center = (CX, CY)
-            Left = CX - View_W // 2
-            Top = CY - View_H // 2
-            Right = Left + View_W
-            Bottom = Top + View_H
-            Crop = self._Image.crop((int(Left), int(Top), int(Right), int(Bottom)))
+            Temp_Image = self._Image.copy()
+            Image_Ratio = self._Image_Width / self._Image_Height
+            Frame_Ratio = Frame_Width / Frame_Height
+            if Image_Ratio>=Frame_Ratio:
+                Width = Frame_Width
+                Width_Ratio = Width / self._Image_Width
+                Height = self._Image_Height * Width_Ratio
+                Top = (Frame_Height - Height) / 2
+                Left = 0
+            if Image_Ratio<Frame_Ratio:
+                Height = Frame_Height
+                Height_Ratio = Height / self._Image_Height
+                Width = self._Image_Width * Height_Ratio
+                Top = 0
+                Left = (Frame_Width - Width) / 2
             if self._Transparent:
-                Crop = Crop.convert("RGBA")
-            Crop = Crop.resize((int(Frame_Width), int(Frame_Height)), PIL_Image.NEAREST)
-            Crop_TK = PIL_ImageTk.PhotoImage(Crop)
-            return {"Image": Crop_TK, "Top": 0, "Left": 0}
+                Temp_Image = Temp_Image.convert("RGBA")
+            Temp_Image = Temp_Image.resize((int(Width), int(Height)), PIL_Image.NEAREST)
+            self._Image_Width, self._Image_Height = Temp_Image.size
+            Temp_Image_TK = PIL_ImageTk.PhotoImage(Temp_Image)
+            return {"Image": Temp_Image_TK, "Top": Top, "Left": Left}
         except Exception as E:
             self._GUI.Error(f"{self._Type} -> Convert -> {E}")
-            return {"Image": None, "Top": 0, "Left": 0}
             
     def Load(self):
         try:
-            if self._Height_Current > 0 and self._Width_Current > 0:
+            if self._Height_Current>0 and self._Width_Current>0:
                 Image = self.Convert(self._Width_Current, self._Height_Current)
-                if Image["Image"] is None:
-                    return
                 if not self._Image_Window:
                     self._Image_Window = self._Frame._Frame.create_image(Image['Left'], Image['Top'], image=Image['Image'], anchor='nw')
                     self._Frame._Frame.Temp_Image = Image['Image']
@@ -1345,16 +1295,16 @@ class Image_Zoom:
             
     def Load_Current(self):
         try:
-            if self._Height_Current > 0 and self._Width_Current > 0:
-                Image = self.Convert(self._Width_Current, self._Height_Current)
-                if Image["Image"] is None:
-                    return
-                if not self._Image_Window:
-                    self._Image_Window = self._Frame._Frame.create_image(0, 0, image=Image['Image'], anchor='nw')
-                else:
-                    self._Frame._Frame.itemconfig(self._Image_Window, image=Image['Image'])
-                    self._Frame._Frame.coords(self._Image_Window, 0, 0)
+            if self._Height_Current>0 and self._Width_Current>0:
+                Coord = self._Frame._Frame.bbox(self._Image_Window)
+                Left = Coord[0]
+                Top = Coord[1]
+                Width = self._Zoom_Width if self._Zoom_Width else self._Width_Current
+                Height = self._Zoom_Height if self._Zoom_Height else self._Height_Current
+                Image = self.Convert(Width, Height)
+                self._Frame._Frame.itemconfig(self._Image_Window, image=Image['Image'])
                 self._Frame._Frame.Temp_Image = Image['Image']
+                self._Frame._Frame.coords(self._Image_Window, Left, Top)
                 self._Frame._Frame.itemconfigure(self._Image_Window, state='normal')
                 self._Frame._Frame.tag_raise(self._Image_Window)
         except Exception as E:
@@ -1362,87 +1312,56 @@ class Image_Zoom:
                 
     def Drag_Start(self, Event):
         try:
-            self._Drag_Last_X = self._Frame._Frame.canvasx(Event.x)
-            self._Drag_Last_Y = self._Frame._Frame.canvasy(Event.y)
-            if self._On_Click:
-                self._On_Click(Event)
+            self._Start_Coord = self._Frame._Frame.canvasx(Event.x), self._Frame._Frame.canvasy(Event.y)
         except Exception:
-            self._Drag_Last_X, self._Drag_Last_Y = 0, 0
+            self.Nothing = False
             
     def Drag(self, Event):
         try:
-            if not self._Image:
-                return
-            Curr_X = self._Frame._Frame.canvasx(Event.x)
-            Curr_Y = self._Frame._Frame.canvasy(Event.y)
-            Delta_X = Curr_X - self._Drag_Last_X
-            Delta_Y = Curr_Y - self._Drag_Last_Y
-            self._Drag_Last_X = Curr_X
-            self._Drag_Last_Y = Curr_Y
-            View_W = self._Image_Width / self._Zoom_Scale
-            View_H = self._Image_Height / self._Zoom_Scale
-            Move_X_Img = -Delta_X * (View_W / self._Width_Current)
-            Move_Y_Img = -Delta_Y * (View_H / self._Height_Current)
-            New_CX = self._Zoom_Center[0] + Move_X_Img
-            New_CY = self._Zoom_Center[1] + Move_Y_Img
-            Half_W = View_W / 2
-            Half_H = View_H / 2
-            New_CX = max(Half_W, min(self._Image_Width - Half_W, New_CX))
-            New_CY = max(Half_H, min(self._Image_Height - Half_H, New_CY))
-            self._Zoom_Center = (New_CX, New_CY)
-            self.Load()
-            if self._On_Drag:
-                self._On_Drag(Event)
+            if self._Image_Window:
+                Current_X, Current_Y = self._Frame._Frame.canvasx(Event.x), self._Frame._Frame.canvasy(Event.y)
+                Move_X, Move_Y = Current_X - self._Start_Coord[0], Current_Y - self._Start_Coord[1]
+                self._Start_Coord = Current_X, Current_Y
+                self._Frame._Frame.move(self._Image_Window, Move_X, Move_Y)
         except Exception as E:
-            self._GUI.Error(f"{self._Type} -> Drag -> {E}")
+            self._GUI.Error(f"{self._Type} -> Drag_Start -> {E}")
             
     def Zoom(self, Event):
         try:
-            if not self._Image:
-                return
-            Zoom_Factor = 1.1 if Event.delta > 0 else 0.9
-            New_Zoom_Scale = self._Zoom_Scale * Zoom_Factor
-            New_Zoom_Scale = max(1.0, New_Zoom_Scale)
-            if New_Zoom_Scale == self._Zoom_Scale:
-                return
-            CanvasX = self._Frame._Frame.canvasx(Event.x)
-            CanvasY = self._Frame._Frame.canvasy(Event.y)
-            Img_X, Img_Y = self._Frame._Frame.coords(self._Image_Window)
-            Mouse_Rel_X = (CanvasX - Img_X) / self._Width_Current
-            Mouse_Rel_Y = (CanvasY - Img_Y) / self._Height_Current
-            View_W = self._Image_Width / self._Zoom_Scale
-            View_H = self._Image_Height / self._Zoom_Scale
-            View_Left = self._Zoom_Center[0] - View_W / 2
-            View_Top = self._Zoom_Center[1] - View_H / 2
-            Mouse_Abs_X = View_Left + Mouse_Rel_X * View_W
-            Mouse_Abs_Y = View_Top + Mouse_Rel_Y * View_H
-            New_View_W = self._Image_Width / New_Zoom_Scale
-            New_View_H = self._Image_Height / New_Zoom_Scale
-            New_View_Left = Mouse_Abs_X - Mouse_Rel_X * New_View_W
-            New_View_Top = Mouse_Abs_Y - Mouse_Rel_Y * New_View_H
-            New_Center_X = New_View_Left + New_View_W / 2
-            New_Center_Y = New_View_Top + New_View_H / 2
-            Half_W = New_View_W / 2
-            Half_H = New_View_H / 2
-            New_Center_X = max(Half_W, min(self._Image_Width - Half_W, New_Center_X))
-            New_Center_Y = max(Half_H, min(self._Image_Height - Half_H, New_Center_Y))
-            self._Zoom_Scale = New_Zoom_Scale
-            self._Zoom_Center = (New_Center_X, New_Center_Y)
-            self.Load()
-            if self._On_Mouse_Wheel:
-                self._On_Mouse_Wheel(Event)
+            if self._Image_Window and self._Image_Width and self._Image_Height:
+                ZoomIncrement = Event.delta
+                ZoomCenterX = self._Frame._Frame.canvasx(Event.x)
+                ZoomCenterY = self._Frame._Frame.canvasy(Event.y)
+                AspectRatio = self._Image_Width / self._Image_Height
+                ZoomIncrementAdjusted = ZoomIncrement * (self._Image_Width / self._Width)
+                ScaleX = int(ZoomIncrementAdjusted)
+                ScaleY = int(ZoomIncrementAdjusted/AspectRatio)
+                self._Last_Zoom_Width = self._Zoom_Width
+                self._Last_Zoom_Height = self._Zoom_Height
+                self._Zoom_Width = self._Image_Width + ScaleX
+                self._Zoom_Height = self._Image_Height + ScaleY
+                if self._Zoom_Height>0:
+                    Image = self.Convert(self._Zoom_Width, self._Zoom_Height)
+                    OldLeft = self._Frame._Frame.coords(self._Image_Window)[0]
+                    OldTop = self._Frame._Frame.coords(self._Image_Window)[1]
+                    if self._Last_Zoom_Width and self._Last_Zoom_Height:
+                        NewLeft = OldLeft-(ScaleX*(ZoomCenterX-OldLeft)/self._Last_Zoom_Width)
+                        NewTop = OldTop-(ScaleY*(ZoomCenterY-OldTop)/self._Last_Zoom_Height)
+                    else:
+                        NewLeft = OldLeft-(ScaleX*(ZoomCenterX-OldLeft)/self._Image_Width)
+                        NewTop = OldTop-(ScaleY*(ZoomCenterY-OldTop)/self._Image_Height)
+                    self._Frame._Frame.Temp_Image = Image
+                    self._Frame._Frame.itemconfig(self._Image_Window, image=Image['Image'])
+                    self._Frame._Frame.coords(self._Image_Window, NewLeft, NewTop)
         except Exception as E:
             self._GUI.Error(f"{self._Type} -> Zoom -> {E}")
-
-    def Reset(self, Event=False):
+            
+    def Reset(self):
         try:
             self._Angle = 0
-            self._Zoom_Scale = 1.0
-            if self._Image:
-                self._Zoom_Center = (self._Image_Width // 2, self._Image_Height // 2)
+            self._Zoom_Width = False
+            self._Zoom_Height = False
             self.Relocate()
-            if self._On_Right_Click:
-                self._On_Right_Click(Event)
         except Exception as E:
             self._GUI.Error(f"{self._Type} -> Reset -> {E}")
             

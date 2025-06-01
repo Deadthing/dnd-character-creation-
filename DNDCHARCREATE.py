@@ -102,7 +102,24 @@ def startup_db():
         ("Soldier", "Professional Fighter"),
     ])
     cursor.execute("""
-                   )                  
+                   CREATE TABLE IF NOT EXISTS alignments (
+                       id INTEGER PRIMARY KEY AUTOINCREMENT,
+                       name TEXT NOT NULL UNIQUE,
+                       description TEXT
+                       )
+                       """)
+    cursor.executemany("INSERT OR IGNORE INTO alignments (name, description) VALUES (?, ?)", [
+        ("Lawful Good", "Moral absolutist"),
+        ("Neutral Good", "Good is more important than law or chaos"),
+        ("Chaotic Good", "Generally good, but follows conscience over law"),
+        ("Lawful Neutral", "Rules over all"),
+        ("True Neutral", "Balance in all things"),
+        ("Chaotic Neutral", "It insists upon itself"),
+        ("Lawful Evil", "Evil, but with a code"),
+        ("Neutral Evil", "Evil, plain and simple"),
+        ("Chaotic Evil", "Evil, with crielty and malice"),
+        
+    ])                  
                       
     conn.commit()
     conn.close()
@@ -259,17 +276,38 @@ if __name__=='__main__':
 # -------------------------------------------------------------------------------------------------------------------------------
 # Developer Programming Start
 # -------------------------------------------------------------------------------------------------------------------------------
-
-#Testing the database functions
-clear_tables()
-startup_db()
+#Testing the database functions ===========================
+# clear_tables()
+# startup_db()
 # creating a varible to store the user_id awkwardly because other way to fix this are getting ahead of myself
-user_id = add_user("Wizard", "itsboss")
-char_id = add_character(user_id, "Red", "Human", "Wizard", level = 1, background = "Sage", alignment = "Lawful Evil")
+#user_id = add_user("Wizard", "itsboss")
+# char_id = add_character(user_id, "Red", "Human", "Wizard", level = 1, background = "Sage", alignment = "Lawful Evil")
 # add_stats(char_id, 10, 12, 14, 16, 18, 20)
-print(f" DEBUG About to fetch stats for character ID: {char_id}, type = {type(char_id)}")
-print_tables()
+# print(f" DEBUG About to fetch stats for character ID: {char_id}, type = {type(char_id)}")
+# print_tables()
+# Testing ============================================================
+startup_db()
 
+conn = sqlite3.connect('characterCreate.db')
+cursor = conn.cursor()
+
+# Populate Race Select Menu
+cursor.execute("SELECT name FROM races")
+for row in cursor.fetchall():
+    Root.Frame1.RaceSelect.Add(row[0])
+    
+# Populate Class Select Menu
+cursor.execute("SELECT name FROM classes")
+for row in cursor.fetchall():
+    Root.Frame1.ClassSelect.Add(row[0])
+
+
+
+
+
+
+
+conn.close()
 # -------------------------------------------------------------------------------------------------------------------------------
 # Developer Programming End
 # -------------------------------------------------------------------------------------------------------------------------------
