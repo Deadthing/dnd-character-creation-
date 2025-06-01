@@ -301,6 +301,17 @@ cursor.execute("SELECT name FROM classes")
 for row in cursor.fetchall():
     Root.Frame1.ClassSelect.Add(row[0])
 
+# Populate Background Select Menu
+
+cursor.execute("SELECT name FROM backgrounds")
+for row in cursor.fetchall():
+    Root.Frame1.BackgroundSelect.Add(row[0])
+    
+# Populate Alignment Select Menu
+cursor.execute("SELECT name FROM alignments")
+for row in cursor.fetchall():
+    Root.Frame1.AlignmentSelect.Add(row[0])
+    
 
 
 
