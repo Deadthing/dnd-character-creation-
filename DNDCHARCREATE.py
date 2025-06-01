@@ -45,7 +45,65 @@ def startup_db():
                        charisma INTEGER NOT NULL,
                        FOREIGN KEY (character_id) REFERENCES characters (id)         
                    )
-                   """)   
+                   """)
+    # Races Table
+    cursor.execute("""
+                   CREATE TABLE IF NOT EXISTS races (
+                   id INTEGER PRIMARY KEY AUTOINCREMENT,
+                   name TEXT NOT NULL UNIQUE,
+                   description TEXT
+                   )
+                   """)
+    cursor.executemany("INSERT OR IGNORE INTO races (name, description) VALUES (?, ?)", [
+        ("Dragonborn", "Dragon Ancestors"),
+        ("Dwarf", "Hardy"),
+        ("Elf", "Graceful"),
+        ("Gnome", "Genius and Madness"),
+        ("Goliath", "Big"),
+        ("Halfling", "Lucky"),
+        ("Human", "Versatile"),
+        ("Orc", "Violent and Misunderstood"),
+        ("Tiefling", "Infernal Bloodline, Objectively the coolest"),
+    ])
+    # Classes Table
+    cursor.execute("""
+                   CREATE TABLE IF NOT EXISTS classes (
+                       id INTEGER PRIMARY KEY AUTOINCREMENT,
+                       name TEXT NOT NULL UNIQUE,
+                       description TEXT
+                   )
+                   """)
+    cursor.executemany("INSERT OR IGNORE INTO classes (name, description) VALUES (?, ?)", [
+        ("Barbarian", "Fighter, but angrier"),
+        ("Bard", "They're not all horny, but a lot of them are horny"),
+        ("Cleric", "Wizards, but their magic comes from a diety"),
+        ("Druid", "Clerics, but feral"),
+        ("Fighter", "Like it says on the tin"),
+        ("Monk", "Fighter but fists"),
+        ("Paladin", "Fighter and Cleric had a baby, and the child has issues"),
+        ("Ranger", "Cooler than Fighters, but about the same"),
+        ("Rogue", "Fighter, but sneaky, with a tragic backstory"),
+        ("Sorcerer", "Jock Wizards"),
+        ("Warlock", "Made a deal, now you have powers"),
+        ("Wizard", "Magic nerds"),
+    ])
+    # Backgrounds Table
+    cursor.execute("""
+                   CREATE TABLE IF NOT EXISTS backgrounds (
+                       id INTEGER PRIMARY KEY AUTOINCREMENT,
+                       name TEXT NOT NULL UNIQUE,
+                       description TEXT
+                   )
+                   """)
+    cursor.executemany("INSERT OR IGNORE INTO backgrounds (name, description) VALUES (?, ?)", [
+        ("Acolyte", "Raised in the church"),
+        ("Criminal", "Like it says on the tin"),
+        ("Sage", "You love to learn"),
+        ("Soldier", "Professional Fighter"),
+    ])
+    cursor.execute("""
+                   )                  
+                      
     conn.commit()
     conn.close()
 
