@@ -14,6 +14,7 @@ def startup_db():
     conn = sqlite3.connect('characterCreate.db')
     cursor = conn.cursor()
     # Create the table if it doesn't exist.
+    cursor.execute(""" DROP TABLE IF EXISTS users """)
     cursor.execute("""
                    CREATE TABLE IF NOT EXISTS users (
                        id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -36,15 +37,16 @@ def startup_db():
                     )
                     """) 
     # Now create Stats Table
+    #cursor.execute(""" DROP TABLE IF EXISTS statistics """)
     cursor.execute("""
                    CREATE TABLE IF NOT EXISTS statistics (
                        character_id INTEGER PRIMARY KEY,
-                       strength INTEGER NOT NULL, 
-                       dexterity INTEGER NOT NULL,
-                       constitution INTEGER NOT NULL,
-                       intelligence INTEGER NOT NULL,
-                       wisdom INTEGER NOT NULL,
-                       charisma INTEGER NOT NULL,
+                       strength INTEGER, 
+                       dexterity INTEGER,
+                       constitution INTEGER,
+                       intelligence INTEGER,
+                       wisdom INTEGER,
+                       charisma INTEGER,
                        FOREIGN KEY (character_id) REFERENCES characters (id)         
                    )
                    """)
@@ -354,7 +356,126 @@ for row in cursor.fetchall():
     
 conn.close()
 
+def SaveChar(event=None):
+    conn = sqlite3.connect('characterCreate.db')
+    cursor = conn.cursor()
+    
+    # Grab Username, print message if empty
+    username = Root.Frame4.userentry.Get().strip()
 
+    if not username:
+        Root.Frame3.readout.Set("Username required to save character")
+        return
+    
+    # Find or Create User
+    cursor.execute("SELECT id FROM users WHERE username = ?", (username,))
+    result = cursor.fetchone()
+    if result:
+        user_id = result[0]
+    else:
+        cursor.execute("INSERT INTO users (username) VALUES (?)", (username,))
+        conn.commit()
+        user_id = cursor.lastrowid
+    
+    # Get Character Info from fields
+    charname = Root.Frame1.NameEntry.Get().strip()
+    charrace = Root.Frame1.RaceSelect.Get()
+    charclass = Root.Frame1.ClassSelect.Get()
+    charbackground = Root.Frame1.BackgroundSelect.Get()
+    charalignment = Root.Frame1.AlignmentSelect.Get()
+    
+    #Check empty fields
+    if not charname or not charrace or not charclass:
+        Root.Frame3.readout.Set("Please enter at least a name, race, and class")
+        return
+    
+    # Add Character to Database
+    cursor.execute("""
+                   INSERT INTO characters (user_id, name, race, class, background, alignment) VALUES (?, ?, ?, ?, ?, ?)""",
+                   (user_id, charname, charrace, charclass, charbackground, charalignment
+                ))
+    conn.commit()
+    character_id = cursor.lastrowid
+    # Get stats if entered
+    
+    try:
+        stats = (
+            int(Root.Frame2.strentry.Get().strip()),
+            int(Root.Frame2.dexentry.Get().strip()),
+            int(Root.Frame2.conentry.Get().strip()),
+            int(Root.Frame2.intentry.Get().strip()),
+            int(Root.Frame2.wisentry.Get().strip()),
+            int(Root.Frame2.chaentry.Get().strip())
+        )
+    except ValueError:
+        Root.Frame3.readout.Set("Stats must be numbers")
+        conn.close()    
+        return
+    # Add stats to database
+    cursor.execute("""
+                   INSERT INTO statistics (character_id, strength, dexterity, constitution, intelligence, wisdom, charisma)
+                   VALUES (?, ?, ?, ?, ?, ?, ?)""",
+                   (character_id, *stats))
+    conn.commit()
+    
+    Root.Frame3.readout.Set("Character saved\n")
+    conn.close()
+    
+    SavedReadout(character_id)  # Call to display the saved character readout
+
+def SavedReadout(character_id):
+    conn = sqlite3.connect('characterCreate.db')
+    cursor = conn.cursor()
+    
+    # Fetch character info
+    cursor.execute("""
+                   SELECT name, race, class, level, background, alignment FROM characters WHERE id = ?
+                   """, (character_id,))
+    character = cursor.fetchone()
+    
+    if not character:
+        Root.Frame3.readout.Set("Character not found")
+        conn.close()
+        return
+    
+    name, race, char_class, level, bacground, alignment = character
+    
+    # Fetch stats
+    cursor.execute("""
+                   SELECT strength, dexterity, constitution, intelligence, wisdom, charisma FROM statistics WHERE character_id = ?
+                   """, (character_id,))
+    stats = cursor.fetchone()
+    
+    conn.close()
+    
+    if stats:
+        strength, dexterity, constitution, intelligence, wisdom, charisma = stats
+        printout = (
+            f"Character: {name}\n"
+            f"Race: {race}\n"
+            f"Class: {char_class}\n"
+            f"Level: {level}\n"
+            f"Background: {bacground}\n"
+            f"Alignment: {alignment}\n"
+            f"------Statistics------\n"
+            f"Strength: {strength}  Dexterity: {dexterity}  Constitution: {constitution}\n"
+            f"Intelligence: {intelligence}  Wisdom: {wisdom}  Charisma: {charisma}"
+        )
+    else:
+        printout = (f"Character: {name} has no stats!")
+    
+    Root.Frame3.readout.Set(printout)
+            
+
+
+def testbutton(event=None):
+    Root.Frame3.readout.Set("Test button clicked")  
+    print("Test button clicked")
+    
+
+# Bind Save Button
+Root.Frame4.save.Bind(On_Click=SaveChar)
+    
 # -------------------------------------------------------------------------------------------------------------------------------
 # Developer Programming End
 # -------------------------------------------------------------------------------------------------------------------------------
