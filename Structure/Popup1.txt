@@ -1,2 +1,8 @@
 
      Popup1
+         usernamefield
+         loginlabel
+         userlabel
+         passlabel
+         passwordfield
+         loginbutton

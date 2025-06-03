@@ -7,6 +7,8 @@
 # -------------------------------------------------------------------------------------------------------------------------------
 import sqlite3
 
+# -------------------------------------------------------------------------------------------------------------------------------
+# Function to initialize the database and create necessary tables
 def startup_db():
     # Establish or connect to the app database.
     conn = sqlite3.connect('characterCreate.db')
@@ -16,7 +18,7 @@ def startup_db():
                    CREATE TABLE IF NOT EXISTS users (
                        id INTEGER PRIMARY KEY AUTOINCREMENT,
                        username TEXT NOT NULL UNIQUE,
-                       password TEXT NOT NULL
+                       password TEXT 
                     )
                      """)
     # Now create characters table
@@ -47,45 +49,52 @@ def startup_db():
                    )
                    """)
     # Races Table
+    #cursor.execute(""" DROP TABLE IF EXISTS races """)
     cursor.execute("""
                    CREATE TABLE IF NOT EXISTS races (
                    id INTEGER PRIMARY KEY AUTOINCREMENT,
                    name TEXT NOT NULL UNIQUE,
+                   size TEXT,
+                   speed INTEGER,
                    description TEXT
                    )
                    """)
-    cursor.executemany("INSERT OR IGNORE INTO races (name, description) VALUES (?, ?)", [
-        ("Dragonborn", "Dragon Ancestors"),
-        ("Dwarf", "Hardy"),
-        ("Elf", "Graceful"),
-        ("Gnome", "Genius and Madness"),
-        ("Goliath", "Big"),
-        ("Halfling", "Lucky"),
-        ("Human", "Versatile"),
-        ("Orc", "Violent and Misunderstood"),
-        ("Tiefling", "Infernal Bloodline, Objectively the coolest"),
+    cursor.executemany("INSERT OR IGNORE INTO races (name, size, speed, description) VALUES (?, ?, ?, ?)", [
+        ("Dragonborn","Medium", 30, "Dragon Ancestors"),
+        ("Dwarf","Medium", 25, "Hardy"),
+        ("Elf","Medium", 30, "Graceful"),
+        ("Gnome", 'Small', 25, "Genius and Madness"),
+        ("Goliath","Medium", 35, "Big"),
+        ("Halfling", 'Small', 25, "Lucky"),
+        ("Human","Medium", 30, "Versatile"),
+        ("Orc","Medium", 30, "Violent and Misunderstood"),
+        ("Tiefling","Medium", 30, "Infernal Bloodline, Objectively the coolest"),
     ])
     # Classes Table
+    #cursor.execute(""" DROP TABLE IF EXISTS classes """)
     cursor.execute("""
                    CREATE TABLE IF NOT EXISTS classes (
                        id INTEGER PRIMARY KEY AUTOINCREMENT,
                        name TEXT NOT NULL UNIQUE,
+                       primarystat TEXT,
+                       hitdice TEXT,
+                       spellcasting BOOLEAN,
                        description TEXT
                    )
                    """)
-    cursor.executemany("INSERT OR IGNORE INTO classes (name, description) VALUES (?, ?)", [
-        ("Barbarian", "Fighter, but angrier"),
-        ("Bard", "They're not all horny, but a lot of them are horny"),
-        ("Cleric", "Wizards, but their magic comes from a diety"),
-        ("Druid", "Clerics, but feral"),
-        ("Fighter", "Like it says on the tin"),
-        ("Monk", "Fighter but fists"),
-        ("Paladin", "Fighter and Cleric had a baby, and the child has issues"),
-        ("Ranger", "Cooler than Fighters, but about the same"),
-        ("Rogue", "Fighter, but sneaky, with a tragic backstory"),
-        ("Sorcerer", "Jock Wizards"),
-        ("Warlock", "Made a deal, now you have powers"),
-        ("Wizard", "Magic nerds"),
+    cursor.executemany("INSERT OR IGNORE INTO classes (name, primarystat, hitdice, spellcasting, description) VALUES (?, ?, ?, ?, ?)", [
+        ("Barbarian", 'Strength', 'd12', 0, "Fighter, but angrier"),
+        ("Bard", 'Charisma', 'd8', 1, "They're not all horny, but a lot of them are horny"),
+        ("Cleric", 'Wisdom', 'd8', 1, "Wizards, but their magic comes from a diety"),
+        ("Druid", 'Wisdom', 'd8', 1, "Clerics, but feral"),
+        ("Fighter", 'Strength or Dexterity', 'd10', 0, "Like it says on the tin"),
+        ("Monk", 'Dexterity and Wisdom', 'd8', 0, "Fighter but fists"),
+        ("Paladin", 'Strength and Charisma', 'd10', 1, "Fighter and Cleric had a baby, and the child has issues"),
+        ("Ranger", 'Dexterity and Wisdom', 'd10', 1, "Cooler than Fighters, but about the same"),
+        ("Rogue", 'Dexterity', 'd8', 0, "Fighter, but sneaky, with a tragic backstory"),
+        ("Sorcerer", 'Charisma', 'd6', 1, "Jock Wizards"),
+        ("Warlock", 'Charisma', 'd8', 1, "Made a deal, now you have powers"),
+        ("Wizard", 'Intelligence', 'd6', 1, "Magic nerds"),
     ])
     # Backgrounds Table
     cursor.execute("""
@@ -119,8 +128,39 @@ def startup_db():
         ("Neutral Evil", "Evil, plain and simple"),
         ("Chaotic Evil", "Evil, with crielty and malice"),
         
-    ])                  
-                      
+    ]) 
+    # Create Levels Table                 
+    cursor.execute("""
+                   CREATE TABLE IF NOT EXISTS levels (
+                       id INTEGER PRIMARY KEY AUTOINCREMENT,
+                       level INTEGER NOT NULL UNIQUE,
+                       experience INTEGER NOT NULL,
+                       proficiency INTEGER NOT NULL
+                   )   
+                   """)
+    # Insert levels, xp, and proficiency bonus
+    cursor.executemany("INSERT OR IGNORE INTO levels (level, experience, proficiency) VALUES (?, ?, ?)", [
+        (1, 0, 2),
+        (2, 300, 2),
+        (3, 900, 2),
+        (4, 2700, 2),
+        (5, 6500, 3),
+        (6, 14000, 3),
+        (7, 23000, 3),
+        (8, 34000, 3),
+        (9, 48000, 4),
+        (10, 64000, 4),
+        (11, 85000, 4),
+        (12, 100000, 4),
+        (13, 120000, 5),
+        (14, 140000, 5),
+        (15, 165000, 5),
+        (16, 195000, 5),
+        (17, 225000, 6),
+        (18, 265000, 6),
+        (19, 305000, 6),
+        (20, 355000, 6)
+    ])              
     conn.commit()
     conn.close()
 
@@ -312,13 +352,9 @@ cursor.execute("SELECT name FROM alignments")
 for row in cursor.fetchall():
     Root.Frame1.AlignmentSelect.Add(row[0])
     
-
-
-
-
-
-
 conn.close()
+
+
 # -------------------------------------------------------------------------------------------------------------------------------
 # Developer Programming End
 # -------------------------------------------------------------------------------------------------------------------------------

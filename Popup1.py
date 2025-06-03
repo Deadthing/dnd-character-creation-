@@ -9,6 +9,7 @@ if __name__=='__main__':
 # -------------------------------------------------------------------------------------------------------------------------------
 # Developer Programming Start
 # -------------------------------------------------------------------------------------------------------------------------------
+
 import sqlite3
 
 def ShowLogin(Root, Create_Popup):
@@ -62,12 +63,12 @@ def ShowLogin(Root, Create_Popup):
         except sqlite3.Error as e:
             Popup1.loginlabel.Set(f"Database error: {e}")
     Popup1.loginbutton.Bind(On_Click=LoginOrRegister)
-    Popup1.Bind(On_Key_Press=LoginOrRegister, Key="Return")   #Auto suggested by Copilot, seemed like a good idea cause honestly I didnt even think of it             
-                
+    Popup1.Bind(On_Key_Press=LoginOrRegister, Key="Return")   #Auto suggested by Copilot, seemed like a good idea cause honestly I didnt even think of it
+
 # -------------------------------------------------------------------------------------------------------------------------------
 # Developer Programming End
 # -------------------------------------------------------------------------------------------------------------------------------
 #################################################################################################################################
 #################################################################################################################################
-#    Root.Start() ###!REQUIRED ------- Any Script After This Will Not Execute
+   # Root.Start() ###!REQUIRED ------- Any Script After This Will Not Execute
 #################################################################################################################################

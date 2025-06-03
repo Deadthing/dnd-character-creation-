@@ -11,5 +11,29 @@
              BackgroundSelect
              AlignmentLabel
              AlignmentSelect
-          Frame2
-          Frame3
+         Frame2
+             strlabel
+             dexlabel
+             conlabel
+             intlabel
+             wislabel
+             chalabel
+             strentry
+             dexentry
+             conentry
+             intentry
+             wisentry
+             chaentry
+             strength
+             dexterity
+             constitution
+             intelligence
+             wisdom
+             charisma
+         Frame3
+             readout
+          Frame4
+             userlabel
+             userentry
+             save
+             load
