@@ -14,7 +14,7 @@ def startup_db():
     conn = sqlite3.connect('characterCreate.db')
     cursor = conn.cursor()
     # Create the table if it doesn't exist.
-    cursor.execute(""" DROP TABLE IF EXISTS users """)
+    cursor.execute(""" DROP TABLE IF EXISTS users """) # Testing purposes, drop the table if it exists to ensure a clean slate
     cursor.execute("""
                    CREATE TABLE IF NOT EXISTS users (
                        id INTEGER PRIMARY KEY AUTOINCREMENT,
